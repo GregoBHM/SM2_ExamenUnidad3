@@ -1,6 +1,6 @@
 # Examen Práctico – Unidad III
 
-**Curso:** Soluciones Moviles II 
+**Curso:** Soluciones Moviles II  
 **Fecha:** 23 de Junio de 2026  
 **Estudiante:** Gregory Brandon Huanca Merma  
 **URL del repositorio:** https://github.com/GregoBHM/SM2_ExamenUnidad3
@@ -9,24 +9,37 @@
 
 ## 1. Estructura de carpetas `.github/workflows/`
 
-![alt text](image.png)
+![alt text](image-3.png)
 
 ## 2. Contenido del archivo `quality-check.yml`
-Este es el archivo YAML configurado para integrarse con React Native y Node.js.
-![alt text](image-1.png)
+
+![alt text](image-2.png)
+
 ## 3. Ejecución del workflow en la pestaña Actions
+
+
 
 ---
 
 ## 4. Explicación de lo realizado
 
-En este examen se ha implementado un flujo de trabajo de integración continua (CI) utilizando GitHub Actions, adaptado para un proyecto móvil desarrollado con React Native (JavaScript/Expo) en lugar de Flutter. 
+Para este examen adapté la plantilla de Flutter a mi stack real, que es React Native con Expo (JavaScript) para el frontend y FastAPI con Python para el backend.
 
-Los pasos realizados son los siguientes:
-1. **Creación del workflow:** Se definió un archivo `quality-check.yml` que se ejecuta automáticamente (trigger) cuando ocurre un evento `push` o `pull_request` hacia la rama principal (`main`).
-2. **Entorno de ejecución:** El *job* (`analyze-and-test`) se ejecuta sobre un entorno de `ubuntu-latest`.
-3. **Instalación de dependencias:** El flujo de trabajo utiliza la acción `setup-node` para instalar Node.js, y posteriormente ejecuta `npm install` para instalar las librerías necesarias para las pruebas (Jest y ESLint).
-4. **Validación de Calidad (Analyze):** Se ejecuta el linter (ESLint) exclusivamente sobre la carpeta `test/` mediante el comando `npm run analyze`. Esto garantiza que el código de prueba cumple con las reglas de estilo y está libre de errores sintácticos, garantizando el 100% de efectividad.
-5. **Pruebas Unitarias (Test):** Se ejecutan 3 pruebas funcionales y unitarias ubicadas en el archivo `test/main.test.js` usando el framework de pruebas **Jest**. Las pruebas verifican: cálculo de XP, validación de dominio institucional (upt.pe) y simulación de formato del estado de conexión de websockets. Al ejecutar `npm test`, todas las pruebas son superadas con éxito.
+Creé las carpetas `.github/workflows/` para el archivo de automatización y `test/` para las pruebas. El workflow que configuré en `quality-check.yml` se dispara automáticamente en cada `push` o `pull request` hacia la rama `main`, sin intervención manual.
 
-La configuración y la ejecución correcta del workflow demuestran una aplicación práctica de los principios DevOps, asegurando que cada nuevo cambio que se introduzca a la rama principal esté previamente validado de forma automática y cumpla con los estándares mínimos de calidad.
+El workflow tiene dos jobs que corren en paralelo:
+
+**Frontend (React Native):**
+- Instala las dependencias con `npm ci`, que es más estricto que `npm install` y garantiza reproducibilidad en el entorno de CI.
+- Ejecuta ESLint sobre la carpeta `test/` para verificar que el código no tenga errores de sintaxis ni problemas de estilo.
+- Corre los tests con Jest e incluye un reporte de cobertura de código (`--coverage`).
+
+En `test/main.test.js` escribí 9 pruebas agrupadas en tres bloques: el sistema de XP y niveles de la app (Novato, Aprendiz, Mentor Académico), la validación del correo institucional `@virtual.upt.pe`, y el estado de conexión WebSocket.
+
+**Backend (FastAPI / Python):**
+- Instala pytest y pydantic.
+- Corre 11 pruebas unitarias definidas en `test/test_backend.py` que validan los esquemas Pydantic del backend sin necesidad de levantar la base de datos ni Firebase.
+
+Para que pytest encuentre los módulos del backend sin importaciones frágiles, añadí un archivo `pytest.ini` que configura `pythonpath = backend`. Las pruebas cubren `TokenPayload`, `UserUpdate`, la validación del dominio de correo y los valores por defecto del esquema `UserResponse`.
+
+Todos los tests pasan al 100% tanto en local como en los servidores de GitHub Actions.

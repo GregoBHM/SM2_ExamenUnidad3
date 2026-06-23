@@ -7,24 +7,44 @@ on:
     branches: [main, master]
 
 jobs:
-  analyze-and-test:
+  frontend-tests:
+    name: Frontend (React Native)
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Analyze (Linter)
         run: npm run analyze
 
-      - name: Run tests
-        run: npm test
+      - name: Run tests with coverage
+        run: npm test -- --coverage --coverageReporters=text
+
+  backend-tests:
+    name: Backend (FastAPI / Python)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install test dependencies
+        run: pip install -r backend/requirements-test.txt
+
+      - name: Run backend tests
+        run: pytest test/test_backend.py -v

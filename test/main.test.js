@@ -1,24 +1,26 @@
-describe('Pruebas Unitarias de la Aplicación', () => {
+describe('RCE UPT - Pruebas del Frontend', () => {
 
-  test('La suma de puntos de experiencia debe ser correcta', () => {
-    const xpInicial = 100;
-    const xpGanada = 50;
-    const xpTotal = xpInicial + xpGanada;
-    expect(xpTotal).toBe(150);
+  test('usuario nuevo empieza como Novato con 0 XP', () => {
+    const calcularNivel = (xp) => {
+      if (xp >= 1000) return 'Mentor Académico';
+      if (xp >= 50) return 'Aprendiz';
+      return 'Novato';
+    };
+    expect(calcularNivel(0)).toBe('Novato');
+    expect(calcularNivel(50)).toBe('Aprendiz');
+    expect(calcularNivel(1000)).toBe('Mentor Académico');
   });
 
-  test('Debe validar correctamente el dominio de correo de la UPT', () => {
-    const emailValido = 'estudiante@virtual.upt.pe';
-    const emailInvalido = 'estudiante@gmail.com';
-    const validarDominioUPT = (email) => email.endsWith('@virtual.upt.pe');
-    expect(validarDominioUPT(emailValido)).toBe(true);
-    expect(validarDominioUPT(emailInvalido)).toBe(false);
+  test('valida correctamente el dominio de correo institucional', () => {
+    const esCorreoUPT = (email) => email.endsWith('@virtual.upt.pe');
+    expect(esCorreoUPT('estudiante@virtual.upt.pe')).toBe(true);
+    expect(esCorreoUPT('estudiante@gmail.com')).toBe(false);
   });
 
-  test('Debe formatear el estado de conexion correctamente', () => {
-    const formatConnectionState = (isConnected) => isConnected ? 'Online' : 'Offline';
-    expect(formatConnectionState(true)).toBe('Online');
-    expect(formatConnectionState(false)).toBe('Offline');
+  test('formatea el estado de conexion WebSocket', () => {
+    const formatearEstado = (conectado) => conectado ? 'Online' : 'Offline';
+    expect(formatearEstado(true)).toBe('Online');
+    expect(formatearEstado(false)).toBe('Offline');
   });
 
 });
