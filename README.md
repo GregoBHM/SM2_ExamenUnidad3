@@ -16,9 +16,9 @@
 ![alt text](image-2.png)
 
 ## 3. Ejecución del workflow en la pestaña Actions
+![alt text](image-4.png)
 
-
-
+![alt text](image-5.png)
 ---
 
 ## 4. Explicación de lo realizado
